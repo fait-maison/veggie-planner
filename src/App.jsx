@@ -14,8 +14,19 @@ function App() {
       color: tokens.colors.gray800,
     }}>
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      
+
       {currentPage === 'Planning' && <PlanningPage />}
+
+      <footer style={{
+        textAlign: 'center',
+        padding: `${tokens.spacing.md} ${tokens.spacing.lg}`,
+        color: tokens.colors.gray400,
+        fontSize: '13px',
+        borderTop: `1px solid ${tokens.colors.sand}`,
+        marginTop: tokens.spacing.xxl,
+      }}>
+        Une application faite maison
+      </footer>
     </div>
   );
 }
