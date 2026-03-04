@@ -9,7 +9,7 @@ Application web de planification de repas végétariens avec génération de lis
 - **Frontend** : React 18 + Vite 5
 - **Styles** : CSS-in-JS avec design tokens (`src/tokens.js`)
 - **Runtime** : Nginx (image Docker multi-stage)
-- **CI/CD** : GitHub Actions → GHCR (`ghcr.io/clementineyadro/veggie-planner`)
+- **CI/CD** : GitHub Actions → GHCR (`ghcr.io/fait-maison/veggie-planner`)
 
 ## Commandes
 
