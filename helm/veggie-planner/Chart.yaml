@@ -1,0 +1,7 @@
+apiVersion: v2
+name: veggie-planner
+description: A Helm chart for Veggie Planner - a vegetarian meal planning application
+type: application
+version: 0.1.0
+appVersion: "latest"
+icon: https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f331.svg
