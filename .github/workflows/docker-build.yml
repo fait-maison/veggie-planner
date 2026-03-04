@@ -79,8 +79,9 @@ jobs:
         run: |
           APP_VERSION="${GITHUB_REF#refs/tags/v}"
 
-          sed -i "s/^version:.*/version: \"${APP_VERSION}\"/" helm/veggie-planner/Chart.yaml
-          sed -i "s/^appVersion:.*/appVersion: \"${APP_VERSION}\"/" helm/veggie-planner/Chart.yaml
+          sed -i "s/^version:.*/version: ${APP_VERSION}/" helm/veggie-planner/Chart.yaml
+          sed -i "s/^appVersion:.*/appVersion: ${APP_VERSION}/" helm/veggie-planner/Chart.yaml
+          
 
           CHART_VERSION=$(grep '^version:' helm/veggie-planner/Chart.yaml | awk '{print $2}')
           helm package helm/veggie-planner --destination /tmp/helm-pkg
