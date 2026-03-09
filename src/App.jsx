@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Header from './components/Header';
 import PlanningPage from './pages/PlanningPage';
 import CoursesPage from './pages/CoursesPage';
