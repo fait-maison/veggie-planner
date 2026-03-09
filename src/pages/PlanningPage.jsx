@@ -210,7 +210,7 @@ const PlanningPage = ({ selectedRecipes, setSelectedRecipes, onGenerateList }) =
           {selectedRecipes.length > 0 && (
             <Button
               onClick={onGenerateList}
-              disabled={selectedRecipes.length < 7}
+              disabled={selectedRecipes.length === 0}
               style={{ width: '100%', marginTop: tokens.spacing.lg }}
             >
               Générer la liste de courses →
