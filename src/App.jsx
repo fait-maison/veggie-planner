@@ -2,11 +2,15 @@ import { useState } from 'react';
 import Header from './components/Header';
 import PlanningPage from './pages/PlanningPage';
 import CoursesPage from './pages/CoursesPage';
+import RecettesPage from './pages/RecettesPage';
 import { tokens } from './tokens';
+import useLocalStorage from './hooks/useLocalStorage';
+import { demoRecipes } from './data/demoData';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('Planning');
   const [selectedRecipes, setSelectedRecipes] = useState([]);
+  const [recipes, setRecipes] = useLocalStorage('veggie-recipes', demoRecipes);
 
   return (
     <div style={{
@@ -19,6 +23,7 @@ function App() {
 
       {currentPage === 'Planning' && (
         <PlanningPage
+          recipes={recipes}
           selectedRecipes={selectedRecipes}
           setSelectedRecipes={setSelectedRecipes}
           onGenerateList={() => setCurrentPage('Courses')}
@@ -26,6 +31,9 @@ function App() {
       )}
       {currentPage === 'Courses' && (
         <CoursesPage selectedRecipes={selectedRecipes} />
+      )}
+      {currentPage === 'Recettes' && (
+        <RecettesPage recipes={recipes} setRecipes={setRecipes} />
       )}
 
       <footer style={{

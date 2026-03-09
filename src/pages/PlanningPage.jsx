@@ -1,10 +1,9 @@
 import { tokens } from '../tokens';
-import { demoRecipes } from '../data/demoData';
 import Card from '../components/Card';
 import Panel from '../components/Panel';
 import Button from '../components/Button';
 
-const PlanningPage = ({ selectedRecipes, setSelectedRecipes, onGenerateList }) => {
+const PlanningPage = ({ recipes, selectedRecipes, setSelectedRecipes, onGenerateList }) => {
   const toggleRecipe = (recipe) => {
     const exists = selectedRecipes.find(r => r.id === recipe.id);
     if (exists) {
@@ -60,7 +59,7 @@ const PlanningPage = ({ selectedRecipes, setSelectedRecipes, onGenerateList }) =
           gridTemplateColumns: 'repeat(2, 1fr)',
           gap: tokens.spacing.md,
         }}>
-          {demoRecipes.map(recipe => (
+          {recipes.map(recipe => (
             <Card
               key={recipe.id}
               selected={isSelected(recipe.id)}
