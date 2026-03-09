@@ -2,16 +2,20 @@ import { useState } from 'react';
 import { tokens } from '../tokens';
 import { generateShoppingList } from '../utils/generateShoppingList';
 import Button from '../components/Button';
+import useLocalStorage from '../hooks/useLocalStorage';
+
+const normalize = (s) => s.trim().toLowerCase();
 
 const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems }) => {
-  const ingredients = generateShoppingList(selectedRecipes);
+  const allIngredients = generateShoppingList(selectedRecipes);
 
-  // Initialise les récurrents pré-cochés
-  const [checkedItems, setCheckedItems] = useState(() => {
-    const initial = {};
-    recurringItems.forEach(item => { initial[`recurring-${item.id}`] = true; });
-    return initial;
-  });
+  // Filtre les ingrédients déjà présents dans les récurrents
+  const recurringNames = recurringItems.map(r => normalize(r.name));
+  const ingredients = allIngredients.filter(i => !recurringNames.includes(normalize(i)));
+
+  const [checkedItems, setCheckedItems] = useLocalStorage('veggie-checked',
+    Object.fromEntries(recurringItems.map(r => [`recurring-${r.id}`, true]))
+  );
   const [additionalItems, setAdditionalItems] = useState([]);
   const [newItem, setNewItem] = useState('');
   const [newRecurring, setNewRecurring] = useState('');
@@ -29,10 +33,16 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems }) => 
 
   const addItem = () => {
     const trimmed = newItem.trim();
-    if (trimmed && !additionalItems.map(i => i.toLowerCase()).includes(trimmed.toLowerCase())) {
+    if (!trimmed) return;
+    const n = normalize(trimmed);
+    const isDuplicate =
+      ingredients.some(i => normalize(i) === n) ||
+      additionalItems.some(i => normalize(i) === n) ||
+      recurringNames.includes(n);
+    if (!isDuplicate) {
       setAdditionalItems(prev => [...prev, trimmed]);
-      setNewItem('');
     }
+    setNewItem('');
   };
 
   const removeAdditional = (item) => {
@@ -41,10 +51,13 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems }) => 
 
   const addRecurring = () => {
     const trimmed = newRecurring.trim();
-    if (trimmed) {
+    if (!trimmed) return;
+    const n = normalize(trimmed);
+    const isDuplicate = recurringNames.includes(n);
+    if (!isDuplicate) {
       setRecurringItems(prev => [...prev, { id: Date.now(), name: trimmed }]);
-      setNewRecurring('');
     }
+    setNewRecurring('');
   };
 
   const removeRecurring = (id) => {
@@ -63,8 +76,10 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems }) => 
     );
   }
 
+  const leftCount = ingredients.length + additionalItems.length;
+
   return (
-    <main style={{ maxWidth: '700px', margin: '0 auto', padding: tokens.spacing.xl }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: tokens.spacing.xl }}>
       {/* En-tête */}
       <div style={{
         display: 'flex',
@@ -95,9 +110,46 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems }) => 
         )}
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.spacing.lg }}>
+      {/* Deux colonnes */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: tokens.spacing.lg, alignItems: 'start' }}>
 
-        {/* Produits récurrents */}
+        {/* Colonne gauche : ingrédients des recettes + ajout manuel */}
+        <Section title="Ingrédients des recettes" count={leftCount}>
+          {ingredients.map(item => (
+            <IngredientRow
+              key={item}
+              item={item}
+              checked={!!checkedItems[`ingredient-${item}`]}
+              onToggle={() => toggleCheck(`ingredient-${item}`)}
+            />
+          ))}
+          {additionalItems.map(item => (
+            <IngredientRow
+              key={item}
+              item={item}
+              checked={!!checkedItems[`additional-${item}`]}
+              onToggle={() => toggleCheck(`additional-${item}`)}
+              onRemove={() => removeAdditional(item)}
+            />
+          ))}
+          <div style={{ padding: `${tokens.spacing.sm} ${tokens.spacing.lg}`, borderTop: `1px solid ${tokens.colors.sand}` }}>
+            <div style={{ display: 'flex', gap: tokens.spacing.sm }}>
+              <input
+                type="text"
+                value={newItem}
+                onChange={e => setNewItem(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && addItem()}
+                placeholder="Ajouter un article…"
+                style={inputStyle}
+              />
+              <Button onClick={addItem} disabled={!newItem.trim()}>
+                Ajouter
+              </Button>
+            </div>
+          </div>
+        </Section>
+
+        {/* Colonne droite : produits récurrents */}
         <Section
           title="Produits récurrents"
           count={recurringItems.length}
@@ -126,52 +178,6 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems }) => 
                 Ajouter
               </Button>
             </div>
-          </div>
-        </Section>
-
-        {/* Ingrédients des recettes */}
-        {ingredients.length > 0 && (
-          <Section title="Ingrédients des recettes" count={ingredients.length}>
-            {ingredients.map(item => (
-              <IngredientRow
-                key={item}
-                item={item}
-                checked={!!checkedItems[`ingredient-${item}`]}
-                onToggle={() => toggleCheck(`ingredient-${item}`)}
-              />
-            ))}
-          </Section>
-        )}
-
-        {/* Ajout manuel */}
-        <Section title="Ajouter un article">
-          <div style={{ padding: tokens.spacing.md }}>
-            <div style={{ display: 'flex', gap: tokens.spacing.sm }}>
-              <input
-                type="text"
-                value={newItem}
-                onChange={e => setNewItem(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && addItem()}
-                placeholder="Ex : Pain de campagne…"
-                style={inputStyle}
-              />
-              <Button onClick={addItem} disabled={!newItem.trim()}>
-                Ajouter
-              </Button>
-            </div>
-            {additionalItems.length > 0 && (
-              <div style={{ marginTop: tokens.spacing.sm }}>
-                {additionalItems.map(item => (
-                  <IngredientRow
-                    key={item}
-                    item={item}
-                    checked={!!checkedItems[`additional-${item}`]}
-                    onToggle={() => toggleCheck(`additional-${item}`)}
-                    onRemove={() => removeAdditional(item)}
-                  />
-                ))}
-              </div>
-            )}
           </div>
         </Section>
 
