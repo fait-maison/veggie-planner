@@ -48,8 +48,8 @@ helm install veggie-planner helm/veggie-planner/ --set ingress.enabled=true
 Toutes les fonctionnalités "Must" du PRD sont implémentées :
 - Planning + sélection de recettes (localStorage)
 - Génération de liste de courses avec dédoublonnage
-- Page Courses : cases à cocher, ajout manuel, produits récurrents pré-cochés
-- Page Recettes : bibliothèque, recherche, favoris, ajout manuel, suppression
+- Page Courses : 2 colonnes (ingrédients | récurrents), cases à cocher, ajout manuel, déduplication inter-colonnes et intra-liste, persistance des états cochés (`veggie-checked`)
+- Page Recettes : bibliothèque, recherche, favoris, ajout manuel, édition des ingrédients (modal), suppression
 - Persistance complète en localStorage
 
 Page Enseignes : navigation présente, non implémentée (Phase 2).
@@ -59,3 +59,5 @@ Page Enseignes : navigation présente, non implémentée (Phase 2).
 - Pas de backend — tout en localStorage
 - `demoData.js` sert uniquement de seed au premier lancement (si localStorage vide)
 - Palette : sage green, terracotta, cream
+- La source de protéines n'est plus affichée dans l'UI — c'est un critère réservé aux futures suggestions depuis des sites externes (Phase 4)
+- Clés localStorage : `veggie-recipes`, `veggie-selected`, `veggie-recurring`, `veggie-checked`

@@ -1,9 +1,9 @@
 # Document d'Exigences Produit : Veggie Planner
 
 ## Présentation du Produit
-**Vision Produit :** Application web pour faciliter la planification hebdomadaire des repas et la gestion des listes de courses d'un couple lillois végétarien, privilégiant les produits locaux et de saison. Le produit vise à réduire la charge mentale liée à l'organisation des courses en proposant des idées de repas variées, en évitant l'oubli de recettes appréciées et en limitant le gaspillage alimentaire.
+**Vision Produit :** Application web pour faciliter la planification hebdomadaire des repas et la gestion des listes de courses d'un foyer lillois végétarien, privilégiant les produits locaux et de saison. Le produit vise à réduire la charge mentale liée à l'organisation des courses en proposant des idées de repas variées, en évitant l'oubli de recettes appréciées et en limitant le gaspillage alimentaire.
 
-**Utilisateurs Cibles :** Couple végétarien d'environ 30 ans, basé à Lille, avec une forte sensibilité aux produits locaux, de saison et aux circuits courts.
+**Utilisateurs Cibles :** Végétariens d'environ 30 ans, basé à Lille, avec une forte sensibilité aux produits locaux, de saison et aux circuits courts.
 
 **Objectifs Business :** 
 - Réduire le temps de préparation de la liste de courses de 60%
@@ -16,11 +16,10 @@
 - Réutilisation de 50% des recettes appréciées sur un mois
 - Réduction du gaspillage alimentaire de 30%
 - Aucun oubli d'ingrédient récurrent sur 4 semaines consécutives
-- Respect de la contrainte protéines dans 100% des plats
 
 ## Personas Utilisateurs
 
-### Persona 1 : Alex (Personne A du couple)
+### Persona 1 : Alex (Personne A du foyer)
 - **Données démographiques :** ~30 ans, actif·ve professionnellement, utilisateur·ice web/mobile standard
 - **Objectifs :** 
   - Varier l'alimentation avec de nouvelles idées de repas
@@ -34,7 +33,7 @@
   - Oubli d'ingrédients récurrents nécessitant des courses supplémentaires
 - **Parcours Utilisateur :** Utilise l'application côte à côte avec son·sa partenaire sur le même appareil pour planifier ensemble les repas de la semaine
 
-### Persona 2 : Sam (Personne B du couple)
+### Persona 2 : Sam (Personne B du foyer)
 - **Données démographiques :** ~30 ans, actif·ve professionnellement, utilisateur·ice web/mobile standard
 - **Objectifs :** 
   - Contribuer à la planification des repas de manière collaborative
