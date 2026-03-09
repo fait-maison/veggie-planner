@@ -132,10 +132,98 @@ const inputStyle = {
   boxSizing: 'border-box',
 };
 
+// ---- Modal d'édition de recette ----
+
+const EditRecipeModal = ({ recipe, onClose, onSave }) => {
+  const [ingredients, setIngredients] = useState((recipe.ingredients || []).join(', '));
+
+  const canSubmit = ingredients.trim();
+
+  const handleSubmit = () => {
+    if (!canSubmit) return;
+    onSave({
+      ...recipe,
+      ingredients: ingredients.split(',').map(i => i.trim()).filter(Boolean),
+    });
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') onClose();
+  };
+
+  return (
+    <div
+      onKeyDown={handleKeyDown}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 100,
+        padding: tokens.spacing.lg,
+      }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div style={{
+        backgroundColor: tokens.colors.white,
+        borderRadius: tokens.radius.lg,
+        padding: tokens.spacing.xl,
+        width: '100%',
+        maxWidth: '480px',
+        boxShadow: tokens.shadow.lg,
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: tokens.spacing.lg,
+        }}>
+          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600', color: tokens.colors.bark }}>
+            Modifier les ingrédients
+          </h2>
+          <button
+            onClick={onClose}
+            style={{ background: 'none', border: 'none', fontSize: '20px', color: tokens.colors.gray400, cursor: 'pointer', lineHeight: 1 }}
+          >
+            ×
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.spacing.md }}>
+          <p style={{ margin: 0, fontSize: '14px', fontWeight: '500', color: tokens.colors.bark }}>
+            {recipe.name}
+          </p>
+
+          <Field label="Ingrédients (séparés par des virgules)">
+            <textarea
+              autoFocus
+              value={ingredients}
+              onChange={e => setIngredients(e.target.value)}
+              placeholder="Ex : Carottes, Lait de coco, Curry, Riz"
+              rows={5}
+              style={{ ...inputStyle, resize: 'vertical', lineHeight: '1.5' }}
+            />
+          </Field>
+
+          <div style={{ display: 'flex', gap: tokens.spacing.sm, justifyContent: 'flex-end', marginTop: tokens.spacing.sm }}>
+            <Button variant="ghost" onClick={onClose}>Annuler</Button>
+            <Button onClick={handleSubmit} disabled={!canSubmit}>
+              Enregistrer
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ---- Page principale ----
 
 const RecettesPage = ({ recipes, setRecipes }) => {
   const [showModal, setShowModal] = useState(false);
+  const [editingRecipe, setEditingRecipe] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const filtered = recipes.filter(r =>
@@ -156,6 +244,11 @@ const RecettesPage = ({ recipes, setRecipes }) => {
   const addRecipe = (recipe) => {
     setRecipes(prev => [...prev, recipe]);
     setShowModal(false);
+  };
+
+  const updateRecipe = (updated) => {
+    setRecipes(prev => prev.map(r => r.id === updated.id ? updated : r));
+    setEditingRecipe(null);
   };
 
   return (
@@ -252,6 +345,13 @@ const RecettesPage = ({ recipes, setRecipes }) => {
                   {recipe.favorite ? '❤️' : '🤍'}
                 </button>
                 <button
+                  onClick={() => setEditingRecipe(recipe)}
+                  title="Modifier les ingrédients"
+                  style={iconButtonStyle}
+                >
+                  ✏️
+                </button>
+                <button
                   onClick={() => deleteRecipe(recipe.id)}
                   title="Supprimer"
                   style={{ ...iconButtonStyle, color: tokens.colors.gray400 }}
@@ -274,6 +374,7 @@ const RecettesPage = ({ recipes, setRecipes }) => {
       </div>
 
       {showModal && <AddRecipeModal onClose={() => setShowModal(false)} onAdd={addRecipe} />}
+      {editingRecipe && <EditRecipeModal recipe={editingRecipe} onClose={() => setEditingRecipe(null)} onSave={updateRecipe} />}
     </main>
   );
 };
