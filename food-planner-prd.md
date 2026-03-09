@@ -291,6 +291,6 @@ _Note : la colonne "Priorité" suit la méthode MoSCoW._
 
 **Document créé le :** 29 janvier 2026
 **Dernière mise à jour :** 9 mars 2026
-**Version :** 1.1
+**Version :** 0.1.0
 **Destinataires :** Équipe de développement (Claude Code, développeur·euses)
 **Prochaine revue :** Après implémentation Phase 2

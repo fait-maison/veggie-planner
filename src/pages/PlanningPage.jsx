@@ -104,13 +104,6 @@ const PlanningPage = ({ recipes, selectedRecipes, setSelectedRecipes, onGenerate
                 borderTop: `1px solid ${tokens.colors.gray100}`,
               }}>
                 <div style={{
-                  fontSize: '13px',
-                  color: tokens.colors.gray600,
-                  marginBottom: tokens.spacing.xs,
-                }}>
-                  <strong style={{ color: tokens.colors.bark }}>Protéine :</strong> {recipe.protein}
-                </div>
-                <div style={{
                   fontSize: '12px',
                   color: tokens.colors.gray400,
                 }}>

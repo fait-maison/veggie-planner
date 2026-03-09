@@ -1,6 +1,6 @@
 # Veggie Planner
 
-Application web de planification de repas végétariens et de génération de liste de courses — pensée pour un couple lillois.
+Application web de planification de repas végétariens et de génération de liste de courses
 
 ## Fonctionnalités (MVP v1.0)
 

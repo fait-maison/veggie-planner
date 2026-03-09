@@ -8,9 +8,8 @@ import Button from '../components/Button';
 const AddRecipeModal = ({ onClose, onAdd }) => {
   const [name, setName] = useState('');
   const [ingredients, setIngredients] = useState('');
-  const [protein, setProtein] = useState('');
 
-  const canSubmit = name.trim() && ingredients.trim() && protein.trim();
+  const canSubmit = name.trim() && ingredients.trim();
 
   const handleSubmit = () => {
     if (!canSubmit) return;
@@ -18,7 +17,6 @@ const AddRecipeModal = ({ onClose, onAdd }) => {
       id: Date.now(),
       name: name.trim(),
       ingredients: ingredients.split(',').map(i => i.trim()).filter(Boolean),
-      protein: protein.trim(),
       source: 'Manuel',
       favorite: false,
     });
@@ -91,15 +89,6 @@ const AddRecipeModal = ({ onClose, onAdd }) => {
               value={ingredients}
               onChange={e => setIngredients(e.target.value)}
               placeholder="Ex : Carottes, Lait de coco, Curry, Riz"
-              style={inputStyle}
-            />
-          </Field>
-
-          <Field label="Source de protéines *">
-            <input
-              value={protein}
-              onChange={e => setProtein(e.target.value)}
-              placeholder="Ex : Pois chiches, Tofu, Œufs…"
               style={inputStyle}
             />
           </Field>
@@ -238,26 +227,20 @@ const RecettesPage = ({ recipes, setRecipes }) => {
                     </span>
                   )}
                 </div>
-                <div style={{ marginTop: tokens.spacing.xs, fontSize: '13px', color: tokens.colors.gray400 }}>
-                  <span style={{ color: tokens.colors.sage, fontWeight: '500' }}>
-                    {recipe.protein}
-                  </span>
-                  {recipe.ingredients?.length > 0 && (
-                    <>
-                      <span style={{ margin: `0 ${tokens.spacing.xs}` }}>·</span>
-                      <span style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        display: 'inline-block',
-                        maxWidth: '500px',
-                        verticalAlign: 'bottom',
-                      }}>
-                        {recipe.ingredients.join(', ')}
-                      </span>
-                    </>
-                  )}
-                </div>
+                {recipe.ingredients?.length > 0 && (
+                  <div style={{ marginTop: tokens.spacing.xs, fontSize: '13px', color: tokens.colors.gray400 }}>
+                    <span style={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      display: 'inline-block',
+                      maxWidth: '500px',
+                      verticalAlign: 'bottom',
+                    }}>
+                      {recipe.ingredients.join(', ')}
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div style={{ display: 'flex', gap: tokens.spacing.xs, flexShrink: 0 }}>
