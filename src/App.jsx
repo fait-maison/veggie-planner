@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import Header from './components/Header';
 import PlanningPage from './pages/PlanningPage';
+import CoursesPage from './pages/CoursesPage';
 import { tokens } from './tokens';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('Planning');
+  const [selectedRecipes, setSelectedRecipes] = useState([]);
 
   return (
     <div style={{
@@ -15,7 +17,16 @@ function App() {
     }}>
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
-      {currentPage === 'Planning' && <PlanningPage />}
+      {currentPage === 'Planning' && (
+        <PlanningPage
+          selectedRecipes={selectedRecipes}
+          setSelectedRecipes={setSelectedRecipes}
+          onGenerateList={() => setCurrentPage('Courses')}
+        />
+      )}
+      {currentPage === 'Courses' && (
+        <CoursesPage selectedRecipes={selectedRecipes} />
+      )}
 
       <footer style={{
         textAlign: 'center',

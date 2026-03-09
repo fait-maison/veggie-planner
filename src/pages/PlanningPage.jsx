@@ -1,13 +1,10 @@
-import { useState } from 'react';
 import { tokens } from '../tokens';
 import { demoRecipes } from '../data/demoData';
 import Card from '../components/Card';
 import Panel from '../components/Panel';
 import Button from '../components/Button';
 
-const PlanningPage = () => {
-  const [selectedRecipes, setSelectedRecipes] = useState([]);
-
+const PlanningPage = ({ selectedRecipes, setSelectedRecipes, onGenerateList }) => {
   const toggleRecipe = (recipe) => {
     const exists = selectedRecipes.find(r => r.id === recipe.id);
     if (exists) {
@@ -22,13 +19,6 @@ const PlanningPage = () => {
   };
 
   const isSelected = (id) => selectedRecipes.some(r => r.id === id);
-
-  const handleGenerateShoppingList = () => {
-    if (selectedRecipes.length >= 7) {
-      // TODO: Implémenter la génération de la liste de courses
-      console.log('Génération de la liste de courses pour', selectedRecipes.length, 'plats');
-    }
-  };
 
   return (
     <main style={{
@@ -218,8 +208,8 @@ const PlanningPage = () => {
 
           {/* Bouton générer la liste de courses */}
           {selectedRecipes.length > 0 && (
-            <Button 
-              onClick={handleGenerateShoppingList}
+            <Button
+              onClick={onGenerateList}
               disabled={selectedRecipes.length < 7}
               style={{ width: '100%', marginTop: tokens.spacing.lg }}
             >
