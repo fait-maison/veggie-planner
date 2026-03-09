@@ -11,6 +11,12 @@ function App() {
   const [currentPage, setCurrentPage] = useState('Planning');
   const [selectedRecipes, setSelectedRecipes] = useLocalStorage('veggie-selected', []);
   const [recipes, setRecipes] = useLocalStorage('veggie-recipes', demoRecipes);
+  const [recurringItems, setRecurringItems] = useLocalStorage('veggie-recurring', [
+    { id: 1, name: 'Yaourts nature' },
+    { id: 2, name: 'Œufs bio x12' },
+    { id: 3, name: 'Pain au levain' },
+    { id: 4, name: 'Lait d\'avoine' },
+  ]);
 
   return (
     <div style={{
@@ -30,7 +36,11 @@ function App() {
         />
       )}
       {currentPage === 'Courses' && (
-        <CoursesPage selectedRecipes={selectedRecipes} />
+        <CoursesPage
+          selectedRecipes={selectedRecipes}
+          recurringItems={recurringItems}
+          setRecurringItems={setRecurringItems}
+        />
       )}
       {currentPage === 'Recettes' && (
         <RecettesPage recipes={recipes} setRecipes={setRecipes} />

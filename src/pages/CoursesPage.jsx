@@ -3,43 +3,58 @@ import { tokens } from '../tokens';
 import { generateShoppingList } from '../utils/generateShoppingList';
 import Button from '../components/Button';
 
-const CoursesPage = ({ selectedRecipes }) => {
+const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems }) => {
   const ingredients = generateShoppingList(selectedRecipes);
-  const [checkedItems, setCheckedItems] = useState({});
+
+  // Initialise les récurrents pré-cochés
+  const [checkedItems, setCheckedItems] = useState(() => {
+    const initial = {};
+    recurringItems.forEach(item => { initial[`recurring-${item.id}`] = true; });
+    return initial;
+  });
   const [additionalItems, setAdditionalItems] = useState([]);
   const [newItem, setNewItem] = useState('');
+  const [newRecurring, setNewRecurring] = useState('');
 
-  const allItems = [...ingredients, ...additionalItems];
-  const checkedCount = allItems.filter(item => checkedItems[item]).length;
+  const allItemKeys = [
+    ...ingredients.map(i => `ingredient-${i}`),
+    ...recurringItems.map(r => `recurring-${r.id}`),
+    ...additionalItems.map(i => `additional-${i}`),
+  ];
+  const checkedCount = allItemKeys.filter(k => checkedItems[k]).length;
 
-  const toggleCheck = (item) => {
-    setCheckedItems(prev => ({ ...prev, [item]: !prev[item] }));
+  const toggleCheck = (key) => {
+    setCheckedItems(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   const addItem = () => {
     const trimmed = newItem.trim();
-    if (trimmed && !allItems.map(i => i.toLowerCase()).includes(trimmed.toLowerCase())) {
+    if (trimmed && !additionalItems.map(i => i.toLowerCase()).includes(trimmed.toLowerCase())) {
       setAdditionalItems(prev => [...prev, trimmed]);
       setNewItem('');
     }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') addItem();
   };
 
   const removeAdditional = (item) => {
     setAdditionalItems(prev => prev.filter(i => i !== item));
   };
 
-  if (selectedRecipes.length === 0) {
+  const addRecurring = () => {
+    const trimmed = newRecurring.trim();
+    if (trimmed) {
+      setRecurringItems(prev => [...prev, { id: Date.now(), name: trimmed }]);
+      setNewRecurring('');
+    }
+  };
+
+  const removeRecurring = (id) => {
+    setRecurringItems(prev => prev.filter(r => r.id !== id));
+    setCheckedItems(prev => { const next = { ...prev }; delete next[`recurring-${id}`]; return next; });
+  };
+
+  if (selectedRecipes.length === 0 && recurringItems.length === 0) {
     return (
-      <main style={{
-        maxWidth: '700px',
-        margin: '0 auto',
-        padding: tokens.spacing.xl,
-        textAlign: 'center',
-      }}>
+      <main style={{ maxWidth: '700px', margin: '0 auto', padding: tokens.spacing.xl, textAlign: 'center' }}>
         <div style={{ fontSize: '64px', marginBottom: tokens.spacing.lg }}>🛒</div>
         <p style={{ color: tokens.colors.gray400, fontSize: '16px', margin: 0 }}>
           Sélectionnez des plats dans le Planning<br />pour générer votre liste de courses.
@@ -49,11 +64,7 @@ const CoursesPage = ({ selectedRecipes }) => {
   }
 
   return (
-    <main style={{
-      maxWidth: '700px',
-      margin: '0 auto',
-      padding: tokens.spacing.xl,
-    }}>
+    <main style={{ maxWidth: '700px', margin: '0 auto', padding: tokens.spacing.xl }}>
       {/* En-tête */}
       <div style={{
         display: 'flex',
@@ -71,171 +82,214 @@ const CoursesPage = ({ selectedRecipes }) => {
           }}>
             Liste de courses
           </h1>
-          <p style={{
-            fontSize: '14px',
-            color: tokens.colors.gray400,
-            margin: `${tokens.spacing.xs} 0 0 0`,
-          }}>
-            {checkedCount}/{allItems.length} articles cochés · {selectedRecipes.length} plats
+          <p style={{ fontSize: '14px', color: tokens.colors.gray400, margin: `${tokens.spacing.xs} 0 0 0` }}>
+            {checkedCount}/{allItemKeys.length} articles cochés · {selectedRecipes.length} plat{selectedRecipes.length !== 1 ? 's' : ''}
           </p>
         </div>
         {checkedCount > 0 && (
-          <Button variant="ghost" onClick={() => setCheckedItems({})}>
+          <Button variant="ghost" onClick={() => setCheckedItems(
+            Object.fromEntries(recurringItems.map(r => [`recurring-${r.id}`, false]))
+          )}>
             Tout décocher
           </Button>
         )}
       </div>
 
-      {/* Section ingrédients des recettes */}
-      <div style={{
-        backgroundColor: tokens.colors.white,
-        borderRadius: tokens.radius.md,
-        boxShadow: tokens.shadow.sm,
-        border: `1px solid ${tokens.colors.sand}`,
-        marginBottom: tokens.spacing.lg,
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          padding: `${tokens.spacing.md} ${tokens.spacing.lg}`,
-          borderBottom: `1px solid ${tokens.colors.sand}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-          <span style={{ fontWeight: '500', color: tokens.colors.bark, fontSize: '15px' }}>
-            Ingrédients des recettes
-          </span>
-          <span style={{ fontSize: '13px', color: tokens.colors.gray400 }}>
-            {ingredients.length} articles
-          </span>
-        </div>
-        <div style={{ padding: `${tokens.spacing.sm} 0` }}>
-          {ingredients.map(item => (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.spacing.lg }}>
+
+        {/* Produits récurrents */}
+        <Section
+          title="Produits récurrents"
+          count={recurringItems.length}
+          badge={{ text: 'Chaque semaine', color: tokens.colors.terracotta }}
+        >
+          {recurringItems.map(item => (
             <IngredientRow
-              key={item}
-              item={item}
-              checked={!!checkedItems[item]}
-              onToggle={() => toggleCheck(item)}
+              key={item.id}
+              item={item.name}
+              checked={!!checkedItems[`recurring-${item.id}`]}
+              onToggle={() => toggleCheck(`recurring-${item.id}`)}
+              onRemove={() => removeRecurring(item.id)}
             />
           ))}
-        </div>
-      </div>
-
-      {/* Section ajout manuel */}
-      <div style={{
-        backgroundColor: tokens.colors.white,
-        borderRadius: tokens.radius.md,
-        boxShadow: tokens.shadow.sm,
-        border: `1px solid ${tokens.colors.sand}`,
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          padding: `${tokens.spacing.md} ${tokens.spacing.lg}`,
-          borderBottom: `1px solid ${tokens.colors.sand}`,
-          fontWeight: '500',
-          color: tokens.colors.bark,
-          fontSize: '15px',
-        }}>
-          Ajouter un article
-        </div>
-        <div style={{ padding: tokens.spacing.md }}>
-          <div style={{ display: 'flex', gap: tokens.spacing.sm }}>
-            <input
-              type="text"
-              value={newItem}
-              onChange={e => setNewItem(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ex : Pain de campagne…"
-              style={{
-                flex: 1,
-                padding: `${tokens.spacing.sm} ${tokens.spacing.md}`,
-                borderRadius: tokens.radius.sm,
-                border: `1px solid ${tokens.colors.sand}`,
-                fontSize: '14px',
-                color: tokens.colors.gray800,
-                backgroundColor: tokens.colors.cream,
-                outline: 'none',
-              }}
-            />
-            <Button onClick={addItem} disabled={!newItem.trim()}>
-              Ajouter
-            </Button>
-          </div>
-          {additionalItems.length > 0 && (
-            <div style={{ marginTop: tokens.spacing.sm }}>
-              {additionalItems.map(item => (
-                <div key={item} style={{ display: 'flex', alignItems: 'center' }}>
-                  <IngredientRow
-                    item={item}
-                    checked={!!checkedItems[item]}
-                    onToggle={() => toggleCheck(item)}
-                    style={{ flex: 1 }}
-                  />
-                  <button
-                    onClick={() => removeAdditional(item)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: tokens.colors.gray400,
-                      cursor: 'pointer',
-                      fontSize: '16px',
-                      padding: `0 ${tokens.spacing.md}`,
-                      lineHeight: 1,
-                    }}
-                    title="Supprimer"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
+          <div style={{ padding: `${tokens.spacing.sm} ${tokens.spacing.lg}`, borderTop: `1px solid ${tokens.colors.sand}` }}>
+            <div style={{ display: 'flex', gap: tokens.spacing.sm }}>
+              <input
+                type="text"
+                value={newRecurring}
+                onChange={e => setNewRecurring(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && addRecurring()}
+                placeholder="Ajouter un produit récurrent…"
+                style={inputStyle}
+              />
+              <Button onClick={addRecurring} disabled={!newRecurring.trim()}>
+                Ajouter
+              </Button>
             </div>
-          )}
-        </div>
+          </div>
+        </Section>
+
+        {/* Ingrédients des recettes */}
+        {ingredients.length > 0 && (
+          <Section title="Ingrédients des recettes" count={ingredients.length}>
+            {ingredients.map(item => (
+              <IngredientRow
+                key={item}
+                item={item}
+                checked={!!checkedItems[`ingredient-${item}`]}
+                onToggle={() => toggleCheck(`ingredient-${item}`)}
+              />
+            ))}
+          </Section>
+        )}
+
+        {/* Ajout manuel */}
+        <Section title="Ajouter un article">
+          <div style={{ padding: tokens.spacing.md }}>
+            <div style={{ display: 'flex', gap: tokens.spacing.sm }}>
+              <input
+                type="text"
+                value={newItem}
+                onChange={e => setNewItem(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && addItem()}
+                placeholder="Ex : Pain de campagne…"
+                style={inputStyle}
+              />
+              <Button onClick={addItem} disabled={!newItem.trim()}>
+                Ajouter
+              </Button>
+            </div>
+            {additionalItems.length > 0 && (
+              <div style={{ marginTop: tokens.spacing.sm }}>
+                {additionalItems.map(item => (
+                  <IngredientRow
+                    key={item}
+                    item={item}
+                    checked={!!checkedItems[`additional-${item}`]}
+                    onToggle={() => toggleCheck(`additional-${item}`)}
+                    onRemove={() => removeAdditional(item)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </Section>
+
       </div>
     </main>
   );
 };
 
-const IngredientRow = ({ item, checked, onToggle, style = {} }) => (
-  <div
-    onClick={onToggle}
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: tokens.spacing.md,
-      padding: `10px ${tokens.spacing.lg}`,
-      cursor: 'pointer',
-      userSelect: 'none',
-      opacity: checked ? 0.45 : 1,
-      ...style,
-    }}
-  >
+// ---- Composants internes ----
+
+const Section = ({ title, count, badge, children }) => (
+  <div style={{
+    backgroundColor: tokens.colors.white,
+    borderRadius: tokens.radius.md,
+    boxShadow: tokens.shadow.sm,
+    border: `1px solid ${tokens.colors.sand}`,
+    overflow: 'hidden',
+  }}>
     <div style={{
-      width: '18px',
-      height: '18px',
-      borderRadius: '4px',
-      border: checked ? 'none' : `2px solid ${tokens.colors.gray400}`,
-      backgroundColor: checked ? tokens.colors.sage : 'transparent',
+      padding: `${tokens.spacing.md} ${tokens.spacing.lg}`,
+      borderBottom: `1px solid ${tokens.colors.sand}`,
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
-      flexShrink: 0,
-      transition: 'all 0.15s',
+      gap: tokens.spacing.sm,
     }}>
-      {checked && (
-        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-          <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+      <span style={{ fontWeight: '500', color: tokens.colors.bark, fontSize: '15px', flex: 1 }}>
+        {title}
+      </span>
+      {badge && (
+        <span style={{
+          fontSize: '11px',
+          backgroundColor: `${badge.color}22`,
+          color: badge.color,
+          padding: '2px 8px',
+          borderRadius: '99px',
+          fontWeight: '500',
+        }}>
+          {badge.text}
+        </span>
+      )}
+      {count !== undefined && (
+        <span style={{ fontSize: '13px', color: tokens.colors.gray400 }}>{count} articles</span>
       )}
     </div>
-    <span style={{
-      fontSize: '14px',
-      color: tokens.colors.gray800,
-      textDecoration: checked ? 'line-through' : 'none',
-    }}>
-      {item}
-    </span>
+    <div style={{ padding: `${tokens.spacing.sm} 0` }}>{children}</div>
   </div>
 );
+
+const IngredientRow = ({ item, checked, onToggle, onRemove }) => (
+  <div style={{ display: 'flex', alignItems: 'center', opacity: checked ? 0.45 : 1 }}>
+    <div
+      onClick={onToggle}
+      style={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        gap: tokens.spacing.md,
+        padding: `10px ${tokens.spacing.lg}`,
+        cursor: 'pointer',
+        userSelect: 'none',
+      }}
+    >
+      <div style={{
+        width: '18px',
+        height: '18px',
+        borderRadius: '4px',
+        border: checked ? 'none' : `2px solid ${tokens.colors.gray400}`,
+        backgroundColor: checked ? tokens.colors.sage : 'transparent',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+        transition: 'all 0.15s',
+      }}>
+        {checked && (
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+            <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
+      </div>
+      <span style={{
+        fontSize: '14px',
+        color: tokens.colors.gray800,
+        textDecoration: checked ? 'line-through' : 'none',
+      }}>
+        {item}
+      </span>
+    </div>
+    {onRemove && (
+      <button
+        onClick={onRemove}
+        title="Supprimer"
+        style={{
+          background: 'none',
+          border: 'none',
+          color: tokens.colors.gray400,
+          cursor: 'pointer',
+          fontSize: '16px',
+          padding: `0 ${tokens.spacing.md}`,
+          lineHeight: 1,
+          flexShrink: 0,
+        }}
+      >
+        ×
+      </button>
+    )}
+  </div>
+);
+
+const inputStyle = {
+  flex: 1,
+  padding: `${tokens.spacing.sm} ${tokens.spacing.md}`,
+  borderRadius: tokens.radius.sm,
+  border: `1px solid ${tokens.colors.sand}`,
+  fontSize: '14px',
+  color: tokens.colors.gray800,
+  backgroundColor: tokens.colors.cream,
+  outline: 'none',
+};
 
 export default CoursesPage;
