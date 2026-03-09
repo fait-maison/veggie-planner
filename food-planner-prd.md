@@ -186,18 +186,18 @@ _Note : la colonne "Priorité" suit la méthode MoSCoW._
 
 ## Planification des Releases
 
-### MVP (v1.0) — Déjà implémenté
-- **Fonctionnalités :** 
-  - Planning de 7 à 10 repas
-  - Suggestions de recettes de saison (données simulées)
-  - Bibliothèque de recettes avec favoris
-  - Ajout manuel de recettes
-  - Génération automatique de liste d'ingrédients
-  - Produits récurrents
-  - Cases à cocher pour suivi en magasin
-  - Stockage localStorage
-- **Planning :** ✅ Livré en janvier 2026
-- **Critères de succès :** 
+### MVP (v1.0) — Implémenté
+- **Fonctionnalités :**
+  - Planning : sélection libre des plats de la semaine (sans minimum imposé)
+  - Suggestions de recettes de saison (données simulées, 10 recettes d'hiver région Lille)
+  - Bibliothèque de recettes avec favoris, recherche par nom/ingrédient, suppression
+  - Ajout manuel de recettes (nom, ingrédients, source de protéines)
+  - Génération automatique de liste d'ingrédients (dédoublonnage, tri alphabétique)
+  - Produits récurrents pré-cochés par défaut, configurables depuis la page Courses
+  - Cases à cocher pour suivi en magasin + ajout manuel d'articles
+  - Stockage localStorage complet (recettes, planning, récurrents)
+- **Planning :** ✅ Livré en mars 2026
+- **Critères de succès :**
   - Application fonctionnelle et utilisable chaque semaine
   - Gain de temps ressenti par les utilisateur·ices
   - Diversification des repas constatée
@@ -289,7 +289,8 @@ _Note : la colonne "Priorité" suit la méthode MoSCoW._
 
 ---
 
-**Document créé le :** 29 janvier 2026  
-**Version :** 1.0  
-**Destinataires :** Équipe de développement (Cursor AI, développeur·euses)  
+**Document créé le :** 29 janvier 2026
+**Dernière mise à jour :** 9 mars 2026
+**Version :** 1.1
+**Destinataires :** Équipe de développement (Claude Code, développeur·euses)
 **Prochaine revue :** Après implémentation Phase 2

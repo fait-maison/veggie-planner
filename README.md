@@ -1,24 +1,26 @@
 # Veggie Planner
 
-Application web de planification de repas végétariens et de listes de courses.
+Application web de planification de repas végétariens et de génération de liste de courses — pensée pour un couple lillois.
 
-## Description
+## Fonctionnalités (MVP v1.0)
 
-Veggie Planner permet de :
+- **Planning** : parcourir les recettes, sélectionner les plats de la semaine, constituer « Ma liste »
+- **Génération de liste de courses** : ingrédients consolidés et dédoublonnés depuis les plats sélectionnés
+- **Produits récurrents** : articles pré-cochés par défaut chaque semaine (configurables)
+- **Cases à cocher** : suivi des achats en magasin, ajout manuel d'articles
+- **Bibliothèque de recettes** : recherche par nom/ingrédient, favoris, suppression
+- **Ajout manuel de recettes** : nom, ingrédients, source de protéines
+- **Persistance** : toutes les données sauvegardées en localStorage (recettes, planning, récurrents)
 
-- **Planning** : parcourir des suggestions de recettes végétariennes (région Lille, recettes d'hiver), sélectionner les plats pour la semaine et constituer « Ma liste ».
-- **Génération de liste de courses** : à partir des plats sélectionnés (7 plats minimum), générer une liste de courses organisée.
-- **Recettes** : gérer ses recettes et ses sources (sites, blogs).
-- **Courses** : consulter et cocher la liste de courses par enseigne.
-- **Enseignes** : gérer les magasins où l’on fait ses courses.
-
-Interface sobre, palette naturelle/terreuse, pensée desktop-first.
+Interface sobre, palette naturelle/terreuse, desktop-first.
 
 ## Stack
 
-- **React 18** avec **Vite**
-- Design tokens (couleurs, espacements, rayons, ombres) dans `src/tokens.js`
-- Données de démo dans `src/data/demoData.js`
+- **React 18** + **Vite 5**
+- CSS-in-JS avec design tokens (`src/tokens.js`)
+- Stockage : localStorage (hook `useLocalStorage`)
+- Runtime : Nginx (image Docker multi-stage)
+- CI/CD : GitHub Actions → GHCR
 
 ## Démarrage
 
@@ -39,14 +41,22 @@ Ouvrir [http://localhost:5173](http://localhost:5173).
 
 ```
 src/
-  components/   # Header, Card, Panel, Button
-  pages/       # PlanningPage, etc.
-  data/        # demoData.js (recettes de démo)
-  tokens.js     # Design tokens
+  components/       # Header, Card, Panel, Button
+  pages/            # PlanningPage, CoursesPage, RecettesPage
+  data/             # demoData.js (recettes initiales)
+  hooks/            # useLocalStorage
+  utils/            # generateShoppingList
+  tokens.js         # Design tokens (couleurs, spacing, radius, shadows)
   App.jsx
   main.jsx
 ```
 
-## Licence
+## Déploiement
 
-Projet de formation.
+```bash
+# Docker
+docker build -t veggie-planner .
+
+# Helm
+helm install veggie-planner helm/veggie-planner/ --set ingress.enabled=true
+```

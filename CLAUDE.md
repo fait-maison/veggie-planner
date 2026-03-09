@@ -24,12 +24,12 @@ npm run preview  # prévisualiser le build
 ```
 src/
 ├── components/   # Header, Card, Button, Panel
-├── pages/        # PlanningPage (seule page implémentée)
-├── data/         # demoData.js (données statiques)
-├── hooks/
-├── utils/
+├── pages/        # PlanningPage, CoursesPage, RecettesPage
+├── data/         # demoData.js (seed localStorage au premier lancement)
+├── hooks/        # useLocalStorage
+├── utils/        # generateShoppingList (dédoublonnage, tri fr)
 ├── tokens.js     # design tokens (couleurs, spacing, radius, shadows)
-└── App.jsx
+└── App.jsx       # routing, état partagé (recipes, selectedRecipes, recurringItems)
 ```
 
 ## Déploiement
@@ -43,8 +43,19 @@ helm template veggie-planner helm/veggie-planner/
 helm install veggie-planner helm/veggie-planner/ --set ingress.enabled=true
 ```
 
+## État du MVP (mars 2026)
+
+Toutes les fonctionnalités "Must" du PRD sont implémentées :
+- Planning + sélection de recettes (localStorage)
+- Génération de liste de courses avec dédoublonnage
+- Page Courses : cases à cocher, ajout manuel, produits récurrents pré-cochés
+- Page Recettes : bibliothèque, recherche, favoris, ajout manuel, suppression
+- Persistance complète en localStorage
+
+Page Enseignes : navigation présente, non implémentée (Phase 2).
+
 ## Notes
 
-- Pas de backend ni de base de données — données hardcodées dans `demoData.js`
-- Pages Recettes, Courses, Enseignes : navigation présente mais non implémentée
+- Pas de backend — tout en localStorage
+- `demoData.js` sert uniquement de seed au premier lancement (si localStorage vide)
 - Palette : sage green, terracotta, cream
