@@ -3,9 +3,11 @@ import Header from './components/Header';
 import PlanningPage from './pages/PlanningPage';
 import CoursesPage from './pages/CoursesPage';
 import RecettesPage from './pages/RecettesPage';
+import EnseignesPage from './pages/EnseignesPage';
 import { tokens } from './tokens';
 import useLocalStorage from './hooks/useLocalStorage';
 import { demoRecipes } from './data/demoData';
+import { defaultEnseignes } from './data/defaultEnseignes';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('Planning');
@@ -17,6 +19,7 @@ function App() {
     { id: 3, name: 'Pain au levain' },
     { id: 4, name: 'Lait d\'avoine' },
   ]);
+  const [enseignes, setEnseignes] = useLocalStorage('veggie-enseignes', defaultEnseignes);
 
   return (
     <div style={{
@@ -40,10 +43,14 @@ function App() {
           selectedRecipes={selectedRecipes}
           recurringItems={recurringItems}
           setRecurringItems={setRecurringItems}
+          enseignes={enseignes}
         />
       )}
       {currentPage === 'Recettes' && (
         <RecettesPage recipes={recipes} setRecipes={setRecipes} />
+      )}
+      {currentPage === 'Enseignes' && (
+        <EnseignesPage enseignes={enseignes} setEnseignes={setEnseignes} />
       )}
 
       <footer style={{
