@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Header from './components/Header';
 import PlanningPage from './pages/PlanningPage';
 import CoursesPage from './pages/CoursesPage';
@@ -9,7 +8,7 @@ import { demoRecipes } from './data/demoData';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('Planning');
-  const [selectedRecipes, setSelectedRecipes] = useState([]);
+  const [selectedRecipes, setSelectedRecipes] = useLocalStorage('veggie-selected', []);
   const [recipes, setRecipes] = useLocalStorage('veggie-recipes', demoRecipes);
 
   return (
