@@ -44,6 +44,7 @@ function App() {
           recurringItems={recurringItems}
           setRecurringItems={setRecurringItems}
           enseignes={enseignes}
+          setEnseignes={setEnseignes}
         />
       )}
       {currentPage === 'Recettes' && (

@@ -7,7 +7,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 
 const normalize = (s) => s.trim().toLowerCase();
 
-const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, enseignes = [] }) => {
+const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, enseignes = [], setEnseignes }) => {
   const allIngredients = generateShoppingList(selectedRecipes);
 
   const recurringNames = recurringItems.map(r => normalize(r.name));
@@ -16,8 +16,7 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, ensei
   const [checkedItems, setCheckedItems] = useLocalStorage('veggie-checked',
     Object.fromEntries(recurringItems.map(r => [`recurring-${r.id}`, true]))
   );
-  const [itemEnseigneMap, setItemEnseigneMap] = useLocalStorage('veggie-item-enseigne', {});
-  const [additionalItems, setAdditionalItems] = useState([]);
+const [additionalItems, setAdditionalItems] = useState([]);
   const [newItem, setNewItem] = useState('');
   const [newRecurring, setNewRecurring] = useState('');
   const [dragOverId, setDragOverId] = useState(null); // 'left-{enseigneId}' | 'right-{enseigneId}'
@@ -65,15 +64,12 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, ensei
   };
 
   const assignItem = (itemName, enseigneId) => {
-    setItemEnseigneMap(prev => {
-      const next = { ...prev };
-      if (enseigneId === 'unassigned') {
-        delete next[normalize(itemName)];
-      } else {
-        next[normalize(itemName)] = enseigneId;
-      }
-      return next;
-    });
+    const normalized = normalize(itemName);
+    setEnseignes(prev => prev.map(e => {
+      const filtered = (e.items ?? []).filter(i => normalize(i) !== normalized);
+      if (e.id === enseigneId) return { ...e, items: [...filtered, itemName.trim()] };
+      return filtered.length !== (e.items ?? []).length ? { ...e, items: filtered } : e;
+    }));
   };
 
   if (selectedRecipes.length === 0 && recurringItems.length === 0) {
@@ -88,9 +84,9 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, ensei
   }
 
   const leftItems = [...ingredients, ...additionalItems];
-  const leftDist = distributeByEnseigne(leftItems, enseignes, itemEnseigneMap);
+  const leftDist = distributeByEnseigne(leftItems, enseignes);
   const rightItems = recurringItems.map(r => r.name);
-  const rightDist = distributeByEnseigne(rightItems, enseignes, itemEnseigneMap);
+  const rightDist = distributeByEnseigne(rightItems, enseignes);
 
   // Toutes les enseignes sont toujours visibles (drop targets), "Non assigné" seulement si non-vide
   const leftSections = [
