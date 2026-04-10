@@ -7,8 +7,8 @@ import useLocalStorage from '../hooks/useLocalStorage';
 
 const normalize = (s) => s.trim().toLowerCase();
 
-const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, enseignes = [], setEnseignes }) => {
-  const allIngredients = generateShoppingList(selectedRecipes);
+const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, enseignes = [], setEnseignes, pantry = [], setPantry }) => {
+  const allIngredients = generateShoppingList(selectedRecipes, pantry);
 
   const recurringNames = recurringItems.map(r => normalize(r.name));
   const ingredients = allIngredients.filter(i => !recurringNames.includes(normalize(i)));
@@ -20,6 +20,8 @@ const [additionalItems, setAdditionalItems] = useState([]);
   const [newItem, setNewItem] = useState('');
   const [newRecurring, setNewRecurring] = useState('');
   const [dragOverId, setDragOverId] = useState(null); // 'left-{enseigneId}' | 'right-{enseigneId}'
+  const [newPantryItem, setNewPantryItem] = useState('');
+  const [pantryOpen, setPantryOpen] = useState(true);
 
   const allItemKeys = [
     ...ingredients.map(i => `ingredient-${i}`),
@@ -61,6 +63,20 @@ const [additionalItems, setAdditionalItems] = useState([]);
   const removeRecurring = (id) => {
     setRecurringItems(prev => prev.filter(r => r.id !== id));
     setCheckedItems(prev => { const next = { ...prev }; delete next[`recurring-${id}`]; return next; });
+  };
+
+  const addPantryItem = () => {
+    const trimmed = newPantryItem.trim();
+    if (!trimmed) return;
+    const n = normalize(trimmed);
+    if (!pantry.some(p => normalize(p) === n)) {
+      setPantry(prev => [...prev, trimmed]);
+    }
+    setNewPantryItem('');
+  };
+
+  const removePantryItem = (item) => {
+    setPantry(prev => prev.filter(p => p !== item));
   };
 
   const assignItem = (itemName, enseigneId) => {
@@ -116,6 +132,7 @@ const [additionalItems, setAdditionalItems] = useState([]);
           </h1>
           <p style={{ fontSize: '14px', color: tokens.colors.gray400, margin: `${tokens.spacing.xs} 0 0 0` }}>
             {checkedCount}/{allItemKeys.length} articles cochés · {selectedRecipes.length} plat{selectedRecipes.length !== 1 ? 's' : ''}
+            {pantry.length > 0 && <span> · {pantry.length} ingrédient{pantry.length !== 1 ? 's' : ''} exclus</span>}
             {enseignes.length > 0 && <span> · glissez les articles pour les assigner à une enseigne</span>}
           </p>
         </div>
@@ -125,6 +142,96 @@ const [additionalItems, setAdditionalItems] = useState([]);
           )}>
             Tout décocher
           </Button>
+        )}
+      </div>
+
+      {/* Panel : Ce que j'ai déjà */}
+      <div style={{
+        backgroundColor: tokens.colors.white,
+        borderRadius: tokens.radius.md,
+        border: `1px solid ${tokens.colors.sand}`,
+        marginBottom: tokens.spacing.lg,
+        boxShadow: tokens.shadow.sm,
+        overflow: 'hidden',
+      }}>
+        <button
+          onClick={() => setPantryOpen(o => !o)}
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: `${tokens.spacing.sm} ${tokens.spacing.lg}`,
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            borderBottom: pantryOpen ? `1px solid ${tokens.colors.sand}` : 'none',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing.sm }}>
+            <span style={{ fontSize: '13px', fontWeight: '600', color: tokens.colors.gray600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Ce que j'ai déjà
+            </span>
+            {pantry.length > 0 && (
+              <span style={{
+                fontSize: '11px',
+                fontWeight: '600',
+                color: tokens.colors.white,
+                backgroundColor: tokens.colors.terracotta,
+                borderRadius: '10px',
+                padding: '1px 7px',
+              }}>
+                {pantry.length}
+              </span>
+            )}
+          </div>
+          <span style={{ fontSize: '12px', color: tokens.colors.gray400, transform: pantryOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>▼</span>
+        </button>
+
+        {pantryOpen && (
+          <div style={{ padding: tokens.spacing.md }}>
+            <p style={{ fontSize: '13px', color: tokens.colors.gray400, margin: `0 0 ${tokens.spacing.sm} 0` }}>
+              Ces ingrédients seront automatiquement exclus de votre liste de courses.
+            </p>
+            {pantry.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: tokens.spacing.sm, marginBottom: tokens.spacing.sm }}>
+                {pantry.map(item => (
+                  <div key={item} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    backgroundColor: tokens.colors.sageLight,
+                    borderRadius: tokens.radius.sm,
+                    padding: '4px 10px',
+                    fontSize: '13px',
+                    color: tokens.colors.sageDark,
+                  }}>
+                    <span>{item}</span>
+                    <button
+                      onClick={() => removePantryItem(item)}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: tokens.colors.sage, fontSize: '14px', lineHeight: 1, padding: '0 0 0 2px' }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div style={{ display: 'flex', gap: tokens.spacing.sm }}>
+              <input
+                type="text"
+                value={newPantryItem}
+                onChange={e => setNewPantryItem(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && addPantryItem()}
+                placeholder="Ex : tofu, lentilles…"
+                style={inputStyle}
+              />
+              <Button onClick={addPantryItem} disabled={!newPantryItem.trim()}>Ajouter</Button>
+              {pantry.length > 0 && (
+                <Button variant="ghost" onClick={() => setPantry([])}>Tout vider</Button>
+              )}
+            </div>
+          </div>
         )}
       </div>
 

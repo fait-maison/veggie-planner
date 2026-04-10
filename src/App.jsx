@@ -20,6 +20,7 @@ function App() {
     { id: 4, name: 'Lait d\'avoine' },
   ]);
   const [enseignes, setEnseignes] = useLocalStorage('veggie-enseignes', defaultEnseignes);
+  const [pantry, setPantry] = useLocalStorage('veggie-pantry', []);
 
   return (
     <div style={{
@@ -45,6 +46,8 @@ function App() {
           setRecurringItems={setRecurringItems}
           enseignes={enseignes}
           setEnseignes={setEnseignes}
+          pantry={pantry}
+          setPantry={setPantry}
         />
       )}
       {currentPage === 'Recettes' && (
