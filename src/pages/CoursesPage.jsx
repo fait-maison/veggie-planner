@@ -235,15 +235,15 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, ensei
         )}
       </div>
 
-      {/* À distribuer */}
+      {/* À distribuer + Non assigné fusionnés */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.spacing.sm, marginBottom: tokens.spacing.lg }}>
         <EnseigneSection
-          sectionKey="unassigned-recipe"
+          sectionKey="unassigned"
           title="À distribuer"
           isUnassigned={true}
-          isEmpty={unassignedRecipe.length === 0}
+          isEmpty={unassignedRecipe.length === 0 && unassignedRecurring.length === 0}
           dragOverId={dragOverId}
-          onDragOver={() => setDragOverId('unassigned-recipe')}
+          onDragOver={() => setDragOverId('unassigned')}
           onDragLeave={() => setDragOverId(null)}
           onDrop={(itemName) => { assignItem(itemName, null); setDragOverId(null); }}
         >
@@ -261,6 +261,16 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, ensei
               />
             );
           })}
+          {unassignedRecurring.map(r => (
+            <IngredientRow
+              key={`recurring-${r.id}`}
+              item={r.name}
+              type="recurring"
+              checked={!!checkedItems[`recurring-${r.id}`]}
+              onToggle={() => toggleCheck(`recurring-${r.id}`)}
+              onRemove={() => removeRecurring(r.id)}
+            />
+          ))}
         </EnseigneSection>
 
         <div style={{
@@ -269,7 +279,7 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, ensei
           border: `1px solid ${tokens.colors.sand}`,
           padding: `${tokens.spacing.sm} ${tokens.spacing.lg}`,
         }}>
-          <div style={{ display: 'flex', gap: tokens.spacing.sm }}>
+          <div style={{ display: 'flex', gap: tokens.spacing.sm, marginBottom: tokens.spacing.sm }}>
             <input
               type="text"
               value={newItem}
@@ -279,6 +289,17 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, ensei
               style={inputStyle}
             />
             <Button onClick={addItem} disabled={!newItem.trim()}>Ajouter</Button>
+          </div>
+          <div style={{ display: 'flex', gap: tokens.spacing.sm }}>
+            <input
+              type="text"
+              value={newRecurring}
+              onChange={e => setNewRecurring(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && addRecurring()}
+              placeholder="Ajouter un produit récurrent…"
+              style={inputStyle}
+            />
+            <Button onClick={addRecurring} disabled={!newRecurring.trim()}>Ajouter</Button>
           </div>
         </div>
       </div>
@@ -324,51 +345,6 @@ const CoursesPage = ({ selectedRecipes, recurringItems, setRecurringItems, ensei
         ))}
       </div>
 
-      {/* Non assigné (récurrents) */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.spacing.sm }}>
-        {unassignedRecurring.length > 0 && (
-          <EnseigneSection
-            sectionKey="unassigned-recurring"
-            title="Non assigné"
-            isUnassigned={true}
-            isEmpty={false}
-            dragOverId={dragOverId}
-            onDragOver={() => setDragOverId('unassigned-recurring')}
-            onDragLeave={() => setDragOverId(null)}
-            onDrop={(itemName) => { assignItem(itemName, null); setDragOverId(null); }}
-          >
-            {unassignedRecurring.map(r => (
-              <IngredientRow
-                key={`recurring-${r.id}`}
-                item={r.name}
-                type="recurring"
-                checked={!!checkedItems[`recurring-${r.id}`]}
-                onToggle={() => toggleCheck(`recurring-${r.id}`)}
-                onRemove={() => removeRecurring(r.id)}
-              />
-            ))}
-          </EnseigneSection>
-        )}
-
-        <div style={{
-          backgroundColor: tokens.colors.white,
-          borderRadius: tokens.radius.md,
-          border: `1px solid ${tokens.colors.sand}`,
-          padding: `${tokens.spacing.sm} ${tokens.spacing.lg}`,
-        }}>
-          <div style={{ display: 'flex', gap: tokens.spacing.sm }}>
-            <input
-              type="text"
-              value={newRecurring}
-              onChange={e => setNewRecurring(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && addRecurring()}
-              placeholder="Ajouter un produit récurrent…"
-              style={inputStyle}
-            />
-            <Button onClick={addRecurring} disabled={!newRecurring.trim()}>Ajouter</Button>
-          </div>
-        </div>
-      </div>
     </main>
   );
 };
@@ -504,9 +480,11 @@ const IngredientRow = ({ item, type, checked, onToggle, onRemove }) => (
       }}>
         {item}
       </span>
+    </div>
+    <div style={{ width: '80px', display: 'flex', justifyContent: 'flex-end', paddingRight: tokens.spacing.sm, flexShrink: 0 }}>
       {type && <ItemBadge type={type} />}
     </div>
-    {onRemove && (
+    {onRemove ? (
       <button
         onClick={onRemove}
         title="Supprimer"
@@ -516,13 +494,17 @@ const IngredientRow = ({ item, type, checked, onToggle, onRemove }) => (
           color: tokens.colors.gray400,
           cursor: 'pointer',
           fontSize: '16px',
-          padding: `0 ${tokens.spacing.md}`,
+          padding: 0,
           lineHeight: 1,
+          width: '32px',
           flexShrink: 0,
+          textAlign: 'center',
         }}
       >
         ×
       </button>
+    ) : (
+      <div style={{ width: '32px', flexShrink: 0 }} />
     )}
   </div>
 );
