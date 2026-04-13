@@ -54,6 +54,14 @@ Toutes les fonctionnalités "Must" du PRD sont implémentées :
 
 Page Enseignes : navigation présente, non implémentée (Phase 2).
 
+## Gestion du backlog
+
+- Repo GitHub : `fait-maison/veggie-planner`
+- Projet GitHub : `https://github.com/orgs/fait-maison/projects/1`
+- `gh` est authentifié avec le compte `ClementineYadro`
+- Un workflow GitHub ajoute automatiquement toute nouvelle issue au projet — **ne pas faire `gh project item-add` manuellement**
+- Authentification : Authelia (SSO sur le NAS) — pour toute feature nécessitant de l'auth ou de l'isolation par utilisateur, s'appuyer sur Authelia via reverse proxy plutôt que de réimplémenter un système d'auth
+
 ## Notes
 
 - Pas de backend — tout en localStorage
