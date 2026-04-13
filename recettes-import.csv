@@ -1,0 +1,27 @@
+id,name,source,protein,ingredients,favorite,notes
+1,Bourguignon aux champignons et lentilles,Adapté recette perso,Lentilles vertes,"Lentilles vertes|Champignons de Paris|Oignon|Ail|Bouquet garni (laurier + thym)|Carottes|Beurre|Farine|Vin de Bourgogne|Bouillon de légumes",true,Adapté : bœuf + lardons → lentilles vertes + champignons
+2,Lasagnes aux lentilles,Adapté recette perso,Lentilles vertes,"Farine|Œufs|Lait|Beurre|Noix de muscade|Parmesan|Emmental|Lentilles vertes|Oignon|Carottes|Pulpe de tomate|Huile d'olive|Ail|Laurier|Thym|Romarin|Vin rouge",true,Adapté : bœuf haché → lentilles vertes
+3,Pois chiches butter masala,Adapté recette perso,Pois chiches,"Pois chiches|Fromage blanc|Épices tandoori|Garam masala|Cannelle|Piment en poudre|Cumin en graines|Clou de girofle|Beurre ghee|Oignon|Ail|Gingembre|Pulpe de tomates|Noix de cajou|Riz basmati",true,Adapté : blancs de poulet → pois chiches (même marinade épices)
+4,Chili sin carne,Adapté recette perso,Haricots rouges,"Oignon|Ail|Poivron rouge|Poivron vert|Haricots rouges|Haricots noirs|Pulpe de tomates|Bouillon de légumes|Concentré de tomate|Huile d'olive|Paprika|Piment en poudre|Cumin|Riz basmati",false,Adapté : bœuf haché → haricots noirs ajoutés
+5,Pâtes carbonara aux champignons fumés,Adapté recette perso,Œufs,"Spaghetti|Crème liquide|Champignons shiitake|Sauce soja|Oignon|Parmesan|Jaunes d'œuf",false,Adapté : poitrine fumée → shiitake + trait de sauce soja
+6,Hachis parmentier,Adapté recette perso,Lentilles vertes,"Lentilles vertes|Carottes|Oignon|Ail|Persil|Concentré de tomate|Chapelure|Emmental|Pommes de terre|Lait|Beurre",true,Adapté : viande hachée → lentilles vertes
+7,Bo bun tofu,Adapté recette perso,Tofu,"Vermicelles de riz|Tofu ferme|Salade verte|Concombre|Carotte|Cacahuètes|Basilic|Coriandre|Sauce soja|Huile de sésame|Gingembre|Ail|Miel",false,Adapté : bœuf → tofu ferme mariné (même sauce)
+8,Endives au gratin fromager,Adapté recette perso,Fromage,"Endives|Emmental|Sucre|Beurre|Noix de muscade|Lait|Farine|Noix",false,Adapté : jambon retiré → noix ajoutées
+9,Croque champignons-épinards,Adapté recette perso,Fromage,"Pain de mie|Champignons de Paris|Épinards|Beurre demi-sel|Emmental",false,Adapté : jambon → champignons poêlés + épinards
+10,Quiche poireaux et champignons,Adapté recette perso,Œufs,"Pâte brisée|Œufs|Crème fraîche|Lait|Poireaux|Champignons de Paris|Emmental|Cumin en graines",true,Adapté : lardons → poireaux + champignons
+11,Pizza,Adapté recette perso,Mozzarella,"Farine|Levure boulangère fraîche|Mozzarella|Pulpe de tomate|Basilic|Huile d'olive|Champignons de Paris|Poivrons",false,Adapté : jambon retiré → champignons + poivrons
+12,Welsh aux champignons,Adapté recette perso,Fromage,"Cheddar|Champignons de Paris|Pain de campagne|Bière blonde|Moutarde|Paprika|Œufs",false,Adapté : jambon → champignons grillés
+13,Couscous,Adapté recette perso,Pois chiches,"Oignons|Miel|Raisins secs|Cannelle|Pois chiches|Carottes|Courgettes|Navets|Céleri|Ras-el-hanout|Piment|Coriandre|Concentré de tomates|Semoule|Beurre|Harissa",true,Adapté : poulet + merguez → pois chiches augmentés + légumes extra
+14,Blanquette de champignons et haricots blancs,Adapté recette perso,Haricots blancs,"Haricots blancs|Champignons de Paris|Carottes|Vin blanc sec|Bouillon de légumes|Oignons|Ail|Beurre|Huile d'olive|Crème fraîche|Citron|Fécule de maïs|Jaune d'œuf|Riz",false,Adapté : veau → champignons de Paris + haricots blancs
+15,Fajitas d'hiver,Adapté recette perso,Haricots noirs,"Galettes de maïs|Haricots noirs|Champignons|Salade iceberg|Crème fraîche|Cheddar|Ail|Oignon|Poivrons piquillos|Paprika|Jus de citron|Piment thaï séché|Coriandre",false,Adapté : poulet mariné → haricots noirs + champignons
+16,Banh Bao,Adapté recette perso,Tofu,"Farine|Sucre|Huile neutre|Levure boulangère|Chou chinois|Shiitake|Tofu ferme|Oignons nouveaux|Sauce soja|Œuf",false,Adapté : porc haché → tofu + shiitake
+17,Poivrons farcis,Adapté recette perso,Lentilles vertes,"Poivrons rouges|Lentilles vertes|Champignons de Paris|Oignon|Ail|Œuf|Chapelure|Persil|Thym|Riz basmati|Bouillon de légumes",false,Adapté : porc haché → lentilles vertes + champignons
+18,Œufs cocotte aux épinards,Adapté recette perso,Œufs,"Œufs|Épinards frais|Champignons de Paris|Emmental|Pommes de terre|Lait|Beurre|Noix de muscade",false,Adapté : lard → épinards frais + champignons
+19,Risotto,Recette perso,Fromage,"Riz rond|Bouillon de légumes|Beurre|Vin blanc|Parmesan|Crème liquide|Champignons de Paris",true,Déjà végétarien
+20,Gratin de chou-fleur,Recette perso,Œufs,"Chou-fleur|Œufs|Lait|Beurre|Farine|Noix de muscade|Emmental",false,Déjà végétarien
+21,Fondant au chocolat,Recette perso,Œufs,"Chocolat noir|Cacao|Beurre|Sucre|Farine|Œufs",true,Dessert
+22,Cookies,Recette perso,Œufs,"Sucre blanc|Sucre roux|Œufs|Farine|Levure chimique|Beurre|Chocolat noir",true,Dessert
+23,Tiramisu,Recette perso,Œufs,"Œufs|Sucre|Farine|Café|Amaretto|Mascarpone|Extrait de vanille|Cacao",true,Dessert
+24,Muffins,Recette perso,Œufs,"Farine|Sucre roux|Levure chimique|Beurre|Sucre vanillé|Œuf|Lait|Chocolat blanc|Framboises",false,Dessert
+25,Cake à la vanille,Recette perso,Œufs,"Œufs|Beurre|Farine|Sucre|Levure chimique|Lait|Extrait de vanille liquide",false,Dessert
+26,Sablés,Recette perso,Œufs,"Beurre|Sucre|Farine|Œuf",false,Dessert
