@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh auth:*)",
+      "Bash(gh label:*)",
+      "Bash(gh project:*)",
+      "Bash(git -C \"/Users/clementineyadro/Documents/perso/dev/Veggie Planner\" log --oneline)"
+    ]
+  }
+}
