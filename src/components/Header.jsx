@@ -1,7 +1,7 @@
 import { tokens } from '../tokens';
 
 const Header = ({ currentPage, setCurrentPage }) => {
-  const navItems = ['Planning', 'Recettes', 'Courses', 'Enseignes'];
+  const navItems = ['Planning', 'Recettes', 'Courses', 'Enseignes', 'Historique'];
 
   return (
     <header style={{

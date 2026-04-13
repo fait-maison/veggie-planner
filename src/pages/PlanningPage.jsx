@@ -3,7 +3,7 @@ import Card from '../components/Card';
 import Panel from '../components/Panel';
 import Button from '../components/Button';
 
-const PlanningPage = ({ recipes, selectedRecipes, setSelectedRecipes, onGenerateList }) => {
+const PlanningPage = ({ recipes, selectedRecipes, setSelectedRecipes, onGenerateList, onArchive }) => {
   const toggleRecipe = (recipe) => {
     const exists = selectedRecipes.find(r => r.id === recipe.id);
     if (exists) {
@@ -198,15 +198,16 @@ const PlanningPage = ({ recipes, selectedRecipes, setSelectedRecipes, onGenerate
             )}
           </div>
 
-          {/* Bouton générer la liste de courses */}
+          {/* Actions */}
           {selectedRecipes.length > 0 && (
-            <Button
-              onClick={onGenerateList}
-              disabled={selectedRecipes.length === 0}
-              style={{ width: '100%', marginTop: tokens.spacing.lg }}
-            >
-              Générer la liste de courses →
-            </Button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.spacing.sm, marginTop: tokens.spacing.lg }}>
+              <Button onClick={onGenerateList} style={{ width: '100%' }}>
+                Générer la liste de courses →
+              </Button>
+              <Button variant="ghost" onClick={onArchive} style={{ width: '100%' }}>
+                Archiver cette semaine
+              </Button>
+            </div>
           )}
         </Panel>
       </div>
