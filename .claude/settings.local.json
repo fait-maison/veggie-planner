@@ -4,7 +4,8 @@
       "Bash(gh auth:*)",
       "Bash(gh label:*)",
       "Bash(gh project:*)",
-      "Bash(git -C \"/Users/clementineyadro/Documents/perso/dev/Veggie Planner\" log --oneline)"
+      "Bash(git -C \"/Users/clementineyadro/Documents/perso/dev/Veggie Planner\" log --oneline)",
+      "Bash(gh issue create --repo ClementineYadro/veggie-planner --title 'Bibliothèque de recettes' --label enhancement --body ':*)"
     ]
   }
 }

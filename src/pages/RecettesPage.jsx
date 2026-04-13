@@ -8,8 +8,34 @@ import Button from '../components/Button';
 const AddRecipeModal = ({ onClose, onAdd }) => {
   const [name, setName] = useState('');
   const [ingredients, setIngredients] = useState('');
+  const [url, setUrl] = useState('');
+  const [importing, setImporting] = useState(false);
+  const [importError, setImportError] = useState('');
+  const [importSource, setImportSource] = useState('Manuel');
 
   const canSubmit = name.trim() && ingredients.trim();
+
+  const handleImport = async () => {
+    if (!url.trim()) return;
+    setImporting(true);
+    setImportError('');
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/import`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Erreur lors de l\'import');
+      setName(data.name);
+      setIngredients(data.ingredients.join(', '));
+      setImportSource('Import');
+    } catch (e) {
+      setImportError(e.message);
+    } finally {
+      setImporting(false);
+    }
+  };
 
   const handleSubmit = () => {
     if (!canSubmit) return;
@@ -17,7 +43,7 @@ const AddRecipeModal = ({ onClose, onAdd }) => {
       id: Date.now(),
       name: name.trim(),
       ingredients: ingredients.split(',').map(i => i.trim()).filter(Boolean),
-      source: 'Manuel',
+      source: importSource,
       favorite: false,
     });
   };
@@ -74,6 +100,26 @@ const AddRecipeModal = ({ onClose, onAdd }) => {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.spacing.md }}>
+          <Field label="Importer depuis une URL (optionnel)">
+            <div style={{ display: 'flex', gap: tokens.spacing.sm }}>
+              <input
+                value={url}
+                onChange={e => { setUrl(e.target.value); setImportError(''); }}
+                onKeyDown={e => e.key === 'Enter' && handleImport()}
+                placeholder="https://www.pickuplimes.com/recipe/…"
+                style={{ ...inputStyle, flex: 1 }}
+              />
+              <Button variant="ghost" onClick={handleImport} disabled={importing || !url.trim()}>
+                {importing ? '…' : 'Importer'}
+              </Button>
+            </div>
+            {importError && (
+              <p style={{ margin: `${tokens.spacing.xs} 0 0`, fontSize: '12px', color: '#C0392B' }}>
+                {importError}
+              </p>
+            )}
+          </Field>
+
           <Field label="Nom de la recette *">
             <input
               autoFocus
@@ -307,16 +353,16 @@ const RecettesPage = ({ recipes, setRecipes }) => {
                   }}>
                     {recipe.name}
                   </h3>
-                  {recipe.source === 'Manuel' && (
+                  {(recipe.source === 'Manuel' || recipe.source === 'Import') && (
                     <span style={{
                       fontSize: '11px',
-                      backgroundColor: tokens.colors.sageLight,
-                      color: tokens.colors.sageDark,
+                      backgroundColor: recipe.source === 'Import' ? tokens.colors.sand : tokens.colors.sageLight,
+                      color: recipe.source === 'Import' ? tokens.colors.barkLight : tokens.colors.sageDark,
                       padding: '2px 8px',
                       borderRadius: '99px',
                       fontWeight: '500',
                     }}>
-                      Manuel
+                      {recipe.source}
                     </span>
                   )}
                 </div>

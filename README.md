@@ -24,12 +24,24 @@ Interface sobre, palette naturelle/terreuse, desktop-first.
 
 ## Démarrage
 
+### Frontend
+
 ```bash
 npm install
 npm run dev
 ```
 
 Ouvrir [http://localhost:5173](http://localhost:5173).
+
+### Backend (import de recettes)
+
+```bash
+cd veggie-planner-api
+pip3 install -r requirements.txt
+python3 -m uvicorn main:app --reload
+```
+
+Le backend tourne sur [http://localhost:8000](http://localhost:8000). Le frontend le contacte automatiquement via `.env.local` (déjà configuré).
 
 ## Scripts
 

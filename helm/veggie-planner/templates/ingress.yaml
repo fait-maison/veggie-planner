@@ -31,5 +31,14 @@ spec:
                 port:
                   name: http
           {{- end }}
+          {{- if $.Values.backend.enabled }}
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "veggie-planner.fullname" $ }}-api
+                port:
+                  name: http
+          {{- end }}
     {{- end }}
 {{- end }}
